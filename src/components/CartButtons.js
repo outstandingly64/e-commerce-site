@@ -10,8 +10,11 @@ import { useUserContext } from '../context/user_context'
 //cart-btn-wrapper class can be found in the NavBar component because
 //when the screen gets smaller these cart buttons won't be displayed
 const CartButtons = () => {
+  const {closeSidebar} = useProductsContext();
+
+
   return <Wrapper className='cart-btn-wrapper'>
-    <Link to='/cart' className='cart-btn'>
+    <Link to='/cart' className='cart-btn' onClick={closeSidebar}>
       Cart
       <span className='cart-container'>
         <FaShoppingCart/>
