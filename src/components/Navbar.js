@@ -29,10 +29,12 @@ const Nav = () => {
       <ul className='nav-links'>
           {navLinks}
       </ul>
+      <CartButtons/>
     </div>
   </NavContainer>
 }
 
+//cart-btn-wrapper is applied in the CartButtons component
 const NavContainer = styled.nav`
   height: 5rem;
   display: flex;
