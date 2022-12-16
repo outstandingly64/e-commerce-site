@@ -16,6 +16,21 @@ const products_reducer = (state, action) => {
   if(action.type === SIDEBAR_CLOSE){
     return {...state, isSidebarOpen:false};
   }
+  if(action.type === GET_PRODUCTS_BEGIN){
+    return {...state, products_loading: true};
+  }
+  if(action.type === GET_PRODUCTS_SUCCESS){
+    const allProducts = action.payload;
+
+    const featuredProducts = allProducts.filter((product) => {
+      return product.featured === true;
+    });
+
+    return {...state, products_loading: false, products: allProducts, featuredProducts: featuredProducts};
+  }
+  if(action.type === GET_PRODUCTS_ERROR){
+    return {...state, products_loading: false, products_error: true};
+  }
   throw new Error(`No Matching "${action.type}" - action type`)
 }
 
