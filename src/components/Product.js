@@ -4,6 +4,8 @@ import { formatPrice } from "../utils/helpers";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+// 1. payment processors look for smallest unit of currency: use formatPrice helper
+// 2. use formatPrice() to prevent bugs from happening during number calculation in JS
 const Product = ({ image, name, price, id }) => {
   return (
     <Wrapper>
@@ -15,7 +17,7 @@ const Product = ({ image, name, price, id }) => {
       </div>
       <footer>
         <h5>{name}</h5>
-        <p>${price}</p>
+        <p>{formatPrice(price)}</p>
       </footer>
     </Wrapper>
   );
