@@ -26,7 +26,7 @@ const products_reducer = (state, action) => {
       return product.featured === true;
     });
 
-    return {...state, products_loading: false, products: allProducts, featuredProducts: featuredProducts};
+    return {...state, products_loading: false, products: allProducts, featured_products: featuredProducts};
   }
   if(action.type === GET_PRODUCTS_ERROR){
     return {...state, products_loading: false, products_error: true};
