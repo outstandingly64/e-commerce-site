@@ -8,18 +8,32 @@ import AmountButtons from "./AmountButtons";
 const AddToCart = ({ product }) => {
   const { id, stock, colors } = product;
   const [mainColor, setMainColor] = useState(colors[0]);
+  const [quantity, setQuantity] = useState(1);
+
   const colorDisplay = colors.map((color, index) => {
     return (
       <button
         key={index}
-        className={`${mainColor === color ? 'color-btn active' : 'color-btn'}`}
+        className={`${mainColor === color ? "color-btn active" : "color-btn"}`}
         style={{ background: color }}
-        onClick={()=> setMainColor(color)}
+        onClick={() => setMainColor(color)}
       >
-        {mainColor === color ? <FaCheck/> : null}
+        {mainColor === color ? <FaCheck /> : null}
       </button>
     );
   });
+
+  const increaseQuantity = () => {
+    setQuantity((oldQuantity) => {
+      return oldQuantity + 1 > stock ? oldQuantity : oldQuantity + 1;
+    });
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity((oldQuantity) => {
+      return oldQuantity - 1 < 1 ? 1 : oldQuantity - 1;
+    });
+  };
 
   return (
     <Wrapper>
@@ -27,7 +41,16 @@ const AddToCart = ({ product }) => {
         <span>colors: </span>
         <div>{colorDisplay}</div>
       </div>
-      <div className="btn-container"></div>
+      <div className="btn-container">
+        <AmountButtons
+          quantity={quantity}
+          increaseQuantity={increaseQuantity}
+          decreaseQuantity={decreaseQuantity}
+        />
+        <Link to="/cart" className="btn">
+          add to cart
+        </Link>
+      </div>
     </Wrapper>
   );
 };
