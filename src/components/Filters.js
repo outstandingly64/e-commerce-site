@@ -24,11 +24,35 @@ const Filters = () => {
   const categories = getUniqueValues(all_products, "category");
   const companies = getUniqueValues(all_products, "company");
   const colors = getUniqueValues(all_products, "colors");
-  console.log(colors);
+  
+ const searchInput = (
+  <div className="form-control">
+              <input
+              type='text'
+              name='text'
+              placeholder="search"
+              className="search-input"
+              value={text}
+              onChange={updateFilters}
+              />
+          </div>
+ );
+
+  const categoryOptions =
+    categories.map((cat, index)=>{
+       return <button key={index}
+       onClick={updateFilters}
+       type="button"
+       name="category"
+       className={`${category === cat.toLowerCase() ? 'active' : null}`}
+       >{cat}</button>
+    });
+  
   
   return <Wrapper>
     <div className="content">
       <form onSubmit={(e)=>e.preventDefault()}>
+          {/*search input start*/}
           <div className="form-control">
               <input
               type='text'
@@ -39,6 +63,15 @@ const Filters = () => {
               onChange={updateFilters}
               />
           </div>
+          {/*search input end*/}
+          {/*category options start*/}
+            <div className="form-control">
+              <h5>Category</h5>
+              <div>
+                {categoryOptions}
+              </div>
+            </div>
+          {/*category options end*/}
       </form>
     </div>
   </Wrapper>;
