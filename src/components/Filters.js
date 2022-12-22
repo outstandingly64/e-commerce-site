@@ -18,63 +18,87 @@ const Filters = () => {
     },
     updateFilters,
     clearFilters,
-    all_products
+    all_products,
   } = useFilterContext();
 
   const categories = getUniqueValues(all_products, "category");
   const companies = getUniqueValues(all_products, "company");
   const colors = getUniqueValues(all_products, "colors");
-  
- const searchInput = (
-  <div className="form-control">
-              <input
-              type='text'
-              name='text'
-              placeholder="search"
-              className="search-input"
-              value={text}
-              onChange={updateFilters}
-              />
-          </div>
- );
 
-  const categoryOptions =
-    categories.map((cat, index)=>{
-       return <button key={index}
-       onClick={updateFilters}
-       type="button"
-       name="category"
-       className={`${category === cat.toLowerCase() ? 'active' : null}`}
-       >{cat}</button>
-    });
-  
-  
-  return <Wrapper>
-    <div className="content">
-      <form onSubmit={(e)=>e.preventDefault()}>
+  const searchInput = (
+    <div className="form-control">
+      <input
+        type="text"
+        name="text"
+        placeholder="search"
+        className="search-input"
+        value={text}
+        onChange={updateFilters}
+      />
+    </div>
+  );
+
+  const categoryOptions = categories.map((cat, index) => {
+    return (
+      <button
+        key={index}
+        onClick={updateFilters}
+        type="button"
+        name="category"
+        className={`${category === cat.toLowerCase() ? "active" : null}`}
+      >
+        {cat}
+      </button>
+    );
+  });
+
+  const companyOptions = companies.map((company, index) => {
+    return (
+      <option key={index} value={company}>
+        {company}
+      </option>
+    );
+  });
+
+  return (
+    <Wrapper>
+      <div className="content">
+        <form onSubmit={(e) => e.preventDefault()}>
           {/*search input start*/}
           <div className="form-control">
-              <input
-              type='text'
-              name='text'
+            <input
+              type="text"
+              name="text"
               placeholder="search"
               className="search-input"
               value={text}
               onChange={updateFilters}
-              />
+            />
           </div>
           {/*search input end*/}
           {/*category options start*/}
-            <div className="form-control">
-              <h5>Category</h5>
-              <div>
-                {categoryOptions}
-              </div>
-            </div>
+          <div className="form-control">
+            <h5>Category</h5>
+            <div>{categoryOptions}</div>
+          </div>
           {/*category options end*/}
-      </form>
-    </div>
-  </Wrapper>;
+          {/*companies options start*/}
+          <div className="form-control">
+            <h5>Company</h5>
+            <select
+              name="company"
+              value={company}
+              onChange={updateFilters}
+              className="company"
+            >
+              {companyOptions}
+            </select>
+          </div>
+          {/*companies options end*/}
+        </form>
+      </div>
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.section`
