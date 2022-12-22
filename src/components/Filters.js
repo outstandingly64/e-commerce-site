@@ -60,6 +60,34 @@ const Filters = () => {
     );
   });
 
+  const colorOptions = colors.map((col, index) => {
+    if (col === "all") {
+      return (
+        <button
+          name="color"
+          onClick={updateFilters}
+          data-color="all"
+          className={`${color === "all" ? "all-btn active" : "all-btn"}`}
+        >
+          All
+        </button>
+      );
+    }
+    return (
+      <button
+        key={index}
+        name="color"
+        style={{ background: col }}
+        onClick={updateFilters}
+        data-color={col}
+        className={`${color === col ? "color-btn active" : "color-btn"}`}
+      >
+        {color === col ? <FaCheck /> : null}
+      </button>
+    );
+  });
+
+  // Filter Component RETURN
   return (
     <Wrapper>
       <div className="content">
@@ -95,6 +123,12 @@ const Filters = () => {
             </select>
           </div>
           {/*companies options end*/}
+          {/*colors options start*/}
+          <div className="form-control">
+            <h5>Colors</h5>
+            <div className="colors">{colorOptions}</div>
+          </div>
+          {/*colors options end*/}
         </form>
       </div>
     </Wrapper>
