@@ -66,6 +66,7 @@ export const FilterProvider = ({ children }) => {
     //category options: can't grab a button's value, but we can grab its textContent
     if(name === 'category') value = e.target.textContent;
     if(name === 'color') value = e.target.dataset.color;
+    if(name === 'price') value = Number(value);
     dispatch({type: UPDATE_FILTERS, payload: {name, value}});
   };
   
