@@ -57,36 +57,64 @@ const filter_reducer = (state, action) => {
     }
     return { ...state, filtered_products: tempProducts };
   }
-  if(action.type === UPDATE_FILTERS) {
-      const {name, value} = action.payload;
-      return {...state, filters: {...state.filters, [name]: value}}
+  if (action.type === UPDATE_FILTERS) {
+    const { name, value } = action.payload;
+    return { ...state, filters: { ...state.filters, [name]: value } };
   }
-  if(action.type === FILTER_PRODUCTS) {
+  if (action.type === FILTER_PRODUCTS) {
     // always start with a fresh copy of all the products
     const { all_products } = state;
-    const { text, category, company, color, price, shipping} = state.filters;
+    const { text, category, company, color, price, shipping } = state.filters;
 
     let tempProducts = [...all_products];
     //filtering
-    if(text){
-      tempProducts = tempProducts.filter((product)=>{
+    if (text) {
+      tempProducts = tempProducts.filter((product) => {
         return product.name.toLowerCase().startsWith(text.toLowerCase());
       });
     }
-
-    return {...state, filtered_products: tempProducts}
-}
-if(action.type === CLEAR_FILTERS){
-  return {...state, filters:{
-    ...state.filters,
-    text: '',
-    company: 'all',
-    category: 'all',
-    color: 'all',
-    price: state.filters.max_price,
-    shipping: false,
-  }};
-}
+    //category
+    if (category !== "all") {
+      tempProducts = tempProducts.filter((product) => {
+        return product.category === category;
+      });
+    }
+    //company
+    if (company !== "all") {
+      tempProducts = tempProducts.filter((product) => {
+        return product.company === company;
+      });
+    }
+    //colors
+    if(color !== 'all'){
+      tempProducts = tempProducts.filter((product) => {
+        return product.colors.find((col)=> col === color);
+      });
+    }
+    //price
+    tempProducts = tempProducts.filter((product) => product.price <= price);
+    //free shipping
+    if(shipping){
+        tempProducts = tempProducts.filter((product) =>{
+          return product.shipping === true;
+        });
+    }
+    return { ...state, filtered_products: tempProducts };
+  }
+  if (action.type === CLEAR_FILTERS) {
+    return {
+      ...state,
+      filters: {
+        ...state.filters,
+        text: "",
+        company: "all",
+        category: "all",
+        color: "all",
+        price: state.filters.max_price,
+        shipping: false,
+      },
+    };
+  }
 
   throw new Error(`No Matching "${action.type}" - action type`);
 };
