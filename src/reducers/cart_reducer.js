@@ -11,7 +11,19 @@ const cart_reducer = (state, action) => {
     const { id, color, quantity, product } = action.payload;
     const tempItem = state.cart.find((item) => item.id === id + color);
     if (tempItem) {
-      //TODO: Functionality for adding a product already in the cart
+      const tempCart = state.cart.map((cartItem) => {
+        if (cartItem.id === id + color) {
+          let newQuantity = cartItem.quantity + quantity;
+          if (newQuantity > cartItem.max) {
+            newQuantity = cartItem.max;
+          }
+          return {...cartItem, quantity: newQuantity}
+        } else {
+          return cartItem;
+        }
+      });
+
+      return { ...state, cart: tempCart };
     } else {
       const newItem = {
         id: id + color,
@@ -22,7 +34,7 @@ const cart_reducer = (state, action) => {
         price: product.price,
         max: product.stock,
       };
-    return { ...state, cart: [...state.cart, newItem] };
+      return { ...state, cart: [...state.cart, newItem] };
     }
   }
   throw new Error(`No Matching "${action.type}" - action type`);
