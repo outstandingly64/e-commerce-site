@@ -37,8 +37,6 @@ const AddToCart = ({ product }) => {
     });
   };
 
-  console.log(stock);
-
   return (
     <Wrapper>
       <div className="colors">
