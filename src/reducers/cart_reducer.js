@@ -17,7 +17,7 @@ const cart_reducer = (state, action) => {
           if (newQuantity > cartItem.max) {
             newQuantity = cartItem.max;
           }
-          return {...cartItem, quantity: newQuantity}
+          return { ...cartItem, quantity: newQuantity };
         } else {
           return cartItem;
         }
@@ -38,14 +38,36 @@ const cart_reducer = (state, action) => {
     }
   }
 
-  if(action.type === REMOVE_CART_ITEM){
-    const { payload: itemIdToRemove} = action;
+  if (action.type === REMOVE_CART_ITEM) {
+    const { payload: itemIdToRemove } = action;
     const tempCart = state.cart.filter((item) => item.id !== itemIdToRemove);
-    return {...state, cart: tempCart}
+    return { ...state, cart: tempCart };
   }
 
-  if(action.type === CLEAR_CART){
-    return {...state, cart: []};
+  if (action.type === CLEAR_CART) {
+    return { ...state, cart: [] };
+  }
+
+  if (action.type === TOGGLE_CART_ITEM_AMOUNT) {
+    const { id, value } = action.payload;
+    const tempCart = state.cart.map((item) => {
+      if (item.id === id) {
+        if (value === "increase") {
+          let newQuantity =
+            item.quantity + 1 > item.max ? item.max : item.quantity + 1;
+          return { ...item, quantity: newQuantity };
+        }
+
+        if (value === "decrease") {
+          let newQuantity = item.quantity - 1 < 1 ? 1 : item.quantity - 1;
+          return { ...item, quantity: newQuantity };
+        }
+      } else {
+        return item;
+      }
+    });
+
+    return { ...state, cart: tempCart };
   }
 
   throw new Error(`No Matching "${action.type}" - action type`);
