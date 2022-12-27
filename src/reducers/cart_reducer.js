@@ -70,6 +70,21 @@ const cart_reducer = (state, action) => {
     return { ...state, cart: tempCart };
   }
 
+  if (action.type === COUNT_CART_TOTALS) {
+    const { total_items, total_quantity } = state.cart.reduce(
+      (total, cartItem) => {
+        const { quantity, price } = cartItem;
+
+        total.total_items += quantity;
+        total.total_quantity += price * quantity;
+        return total;
+      },
+      { total_items: 0, total_quantity: 0 }
+    );
+
+    return { ...state, total_items, total_quantity };
+  }
+
   throw new Error(`No Matching "${action.type}" - action type`);
 };
 
