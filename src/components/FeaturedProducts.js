@@ -13,23 +13,26 @@ const FeaturedProducts = () => {
     featured_products: featured,
   } = useProductsContext();
 
-  if(loading) return <Loading />;
+  if (loading) return <Loading />;
 
-  if(error) return <Error />;
+  if (error) return <Error />;
 
-  const featured_products = featured.slice(0,6).map((product) => {
-    return <Product key={product.id} {...product}/>;
+  const featured_products = featured.slice(0, 6).map((product) => {
+    return <Product key={product.id} {...product} />;
   });
 
-  return <Wrapper>
-    <div className="title">
+  return (
+    <Wrapper className="section">
+      <div className="title">
         <h2>Featured Products of the Week</h2>
         <div className="underline"></div>
-    </div>
-    <div className="section-center featured">
-      {featured_products}
-    </div>
-  </Wrapper>;
+      </div>
+      <div className="section-center featured">{featured_products}</div>
+      <Link to="/products" className="btn">
+       All Products
+      </Link>
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.section`

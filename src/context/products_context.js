@@ -11,6 +11,7 @@ import {
   GET_SINGLE_PRODUCT_BEGIN,
   GET_SINGLE_PRODUCT_SUCCESS,
   GET_SINGLE_PRODUCT_ERROR,
+  CLEAR_SINGLE_PRODUCT_ERROR,
 } from "../actions";
 
 const initialState = {
@@ -38,28 +39,31 @@ export const ProductsProvider = ({ children }) => {
   };
 
   const fetchProducts = async (url) => {
-    dispatch({type: GET_PRODUCTS_BEGIN});
+    dispatch({ type: GET_PRODUCTS_BEGIN });
 
-    try{
+    try {
       const response = await axios.get(url);
       const products = response.data;
-      dispatch({type: GET_PRODUCTS_SUCCESS, payload: products});
-    }catch(err){
-        dispatch({type: GET_PRODUCTS_ERROR});
+      dispatch({ type: GET_PRODUCTS_SUCCESS, payload: products });
+    } catch (err) {
+      dispatch({ type: GET_PRODUCTS_ERROR });
     }
-
   };
 
   const fetchSingleProduct = async (url) => {
-    dispatch({type: GET_SINGLE_PRODUCT_BEGIN});
+    dispatch({ type: GET_SINGLE_PRODUCT_BEGIN });
 
-    try{
+    try {
       const response = await axios.get(url);
       const singleProduct = response.data;
-      dispatch({type: GET_SINGLE_PRODUCT_SUCCESS, payload: singleProduct});
-    }catch(err){
-      dispatch({type: GET_SINGLE_PRODUCT_ERROR});
+      dispatch({ type: GET_SINGLE_PRODUCT_SUCCESS, payload: singleProduct });
+    } catch (err) {
+      dispatch({ type: GET_SINGLE_PRODUCT_ERROR });
     }
+  };
+
+  const cleanUpInvalidProduct = () => {
+    dispatch({ type: CLEAR_SINGLE_PRODUCT_ERROR });
   };
 
   useEffect(() => {
@@ -67,7 +71,15 @@ export const ProductsProvider = ({ children }) => {
   }, []);
 
   return (
-    <ProductsContext.Provider value={{ ...state, openSidebar, closeSidebar, fetchSingleProduct }}>
+    <ProductsContext.Provider
+      value={{
+        ...state,
+        openSidebar,
+        closeSidebar,
+        fetchSingleProduct,
+        cleanUpInvalidProduct,
+      }}
+    >
       {children}
     </ProductsContext.Provider>
   );

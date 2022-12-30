@@ -22,19 +22,22 @@ const SingleProductPage = () => {
     single_product_error: error,
     single_product: product,
     fetchSingleProduct,
+    cleanUpInvalidProduct,
   } = useProductsContext();
 
   useEffect(() => {
     fetchSingleProduct(`${url}${id}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // TODO: Possible Bug
   useEffect(() => {
     if (error) {
       setTimeout(() => {
+        cleanUpInvalidProduct();
         history.push("/");
       }, 3000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error]);
 
   if (loading) return <Loading />;
