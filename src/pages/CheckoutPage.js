@@ -5,20 +5,38 @@ import { PageHero, StripeCheckout } from "../components";
 import { useCartContext } from "../context/cart_context";
 import { Link } from "react-router-dom";
 
+/**
+ * This component communicates with Stipe via the Netlfiy
+ * serverless functions created. It is not secure to
+ * communciate to Stripe directly from the component itself.
+ */
 const CheckoutPage = () => {
+  const { cart } = useCartContext();
+
+  const emptyCart = (
+    <div className="empty">
+      <h2>Your cart is empty!</h2>
+      <Link to="/products" className="btn">
+        Shop Products
+      </Link>
+    </div>
+  );
+
   return (
     <main>
       <PageHero title={`checkout`} />
       <Wrapper className="page">
-        <h1>
-          CHECKOUT: Ut lobortis mollis nibh, nec accumsan est feugiat sed. Aliquam pretium
-          mi nulla, laoreet feugiat lectus finibus eget. Morbi tempus libero et
-          diam aliquam, ut fringilla dui aliquam. Fusce dictum ante eros, vel
-          bibendum mauris sagittis in.{" "}
-        </h1>
+        {cart.length < 1 ? emptyCart : <StripeCheckout />}
       </Wrapper>
     </main>
   );
 };
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .empty {
+    text-align: center;
+  }
+`;
 export default CheckoutPage;
