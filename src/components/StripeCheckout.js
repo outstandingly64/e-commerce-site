@@ -21,11 +21,11 @@ const CheckoutForm = () => {
   const history = useHistory();
 
   //Stripe State Functionality
-  const [processing, setProcessing] = useState('');
+  const [processing, setProcessing] = useState("");
   const [succeeded, setSucceeded] = useState(false);
   const [stripeError, setStripeError] = useState(null);
   const [disabled, setDisabled] = useState(true);
-  const [clientSecret, setClientSecret] = useState('');
+  const [clientSecret, setClientSecret] = useState("");
   const stripe = useStripe();
   const elements = useElements();
 
@@ -47,7 +47,48 @@ const CheckoutForm = () => {
     },
   };
 
-  return <h4>hello from Stripe Checkout </h4>;
+  const createPaymentIntent = async () => {
+    console.log("creating payment intent");
+  };
+
+  useEffect(() => {
+    createPaymentIntent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleChange = (event) => {};
+  const handleSubmit = (event) => {};
+
+  return (
+    <div>
+      <form id="payment-form" onSubmit={handleSubmit}>
+        <CardElement
+          id="card-element"
+          options={CARD_ELEMENT_OPTIONS}
+          onChange={handleChange}
+        />
+        <button disabled={processing || disabled || succeeded} id="submit">
+          <span id="button-text">
+            {processing ? <div className="spinner"></div> : "Pay"}
+          </span>
+        </button>
+        {/* show any error that occurs when processing the payment*/}
+        {stripeError && (
+          <div className="card-error" role="alert">
+            {stripeError}
+          </div>
+        )}
+        {/* show success message upon completing operation*/}
+        <p className={succeeded ? "result-message" : "result-message hidden"}>
+          Payment proccessed successfully! Verify summary in your{" "}
+          <a href={`https://dashboard.stripe.com/test/payments`}>
+            Stripe dashboard
+          </a>
+          . Refresh to start over.
+        </p>
+      </form>
+    </div>
+  );
 };
 
 const StripeCheckout = () => {
