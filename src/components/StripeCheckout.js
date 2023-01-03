@@ -11,14 +11,14 @@ import axios from "axios";
 import { useCartContext } from "../context/cart_context";
 import { useUserContext } from "../context/user_context";
 import { formatPrice } from "../utils/helpers";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const CheckoutForm = () => {
   const { cart, total_quantity, shipping_fee, clearCart } = useCartContext();
   const { myUser } = useUserContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   //Stripe State Functionality
   const [processing, setProcessing] = useState("");
@@ -89,8 +89,8 @@ const CheckoutForm = () => {
       setSucceeded(true);
       setTimeout(()=>{
         clearCart();
-        history.push('/');
-      }, 10000);
+        navigate('/');
+      }, 5000);
     }
   };
 
@@ -138,7 +138,7 @@ const CheckoutForm = () => {
           <a href={`https://dashboard.stripe.com/test/payments`}>
             Stripe dashboard
           </a>
-          . Refresh to start over.
+          . Redirecting to homepage...
         </p>
       </form>
     </div>
