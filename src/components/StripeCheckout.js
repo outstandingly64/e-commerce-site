@@ -16,13 +16,13 @@ import { useHistory } from "react-router-dom";
 const promise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 const CheckoutForm = () => {
-  const { cart, total_amount, shipping_fee } = useCartContext();
+  const { cart, total_quantity, shipping_fee, clearCart } = useCartContext();
   const { myUser } = useUserContext();
   const history = useHistory();
 
   //Stripe State Functionality
   const [processing, setProcessing] = useState("");
-  const [succeeded, setSucceeded] = useState(false);
+  const [succeeded, setSucceeded] = useState();
   const [stripeError, setStripeError] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [clientSecret, setClientSecret] = useState("");
@@ -54,7 +54,7 @@ const CheckoutForm = () => {
         JSON.stringify({
           cart,
           shipping_fee,
-          total_amount,
+          total_quantity,
         })
       );
       setClientSecret(data.clientSecret);
@@ -68,11 +68,53 @@ const CheckoutForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleChange = (event) => {};
-  const handleSubmit = (event) => {};
+  const handleChange = async (event) => {
+    setDisabled(event.empty);
+    setStripeError(event.error ? event.error.message : "");
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setProcessing(true);
+    const payload = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+      },
+    });
+    if (payload.error) {
+      setStripeError(`Payment failed: ${payload.error.message}`);
+      setProcessing(false);
+    }else{
+      setStripeError(null)
+      setProcessing(false);
+      setSucceeded(true);
+      setTimeout(()=>{
+        clearCart();
+        history.push('/');
+      }, 10000);
+    }
+  };
+
+  const TransactionMsg = () => {
+    if (succeeded) {
+      return (
+        <article>
+          <h4>Thank You! Your demo payment was successful!</h4>
+          <p>You will be re-directed to the landing page if you wish to demo again!</p>
+        </article>
+      );
+    }
+    return (
+      <article>
+        <h4>Hello, {myUser && myUser.name}</h4>
+        <p>Your total is {formatPrice(shipping_fee + total_quantity)}</p>
+        <p>For Demo Purposes Enter This Card Number: 4242 4242 4242 4242</p>
+      </article>
+    );
+  };
 
   return (
     <div>
+      <TransactionMsg />
       <form id="payment-form" onSubmit={handleSubmit}>
         <CardElement
           id="card-element"
